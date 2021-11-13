@@ -103,16 +103,12 @@ Loop Forever:
     - Proof (was left as an exercise to the reader in the book as usual lol):
     - First let $\alpha \in (0, 1]$ and $\gamma := (1-\alpha)$
     - $\gamma \neq 1$ Since if $\gamma = 1$ then $\alpha = 0$ which won't fit the supposition of $\alpha \in (0,1]$
-$$
-\begin{align*}
-(1-\alpha)^n + \sum\limits_{i=1}^n\alpha(1-\alpha)^{n-i} &= \gamma^n + \sum\limits_{i=1}^n\alpha\gamma^{n-i}\\
-&= \gamma^n + \sum\limits_{k=0}^{n-1}\alpha\gamma^{k} \\
-&= \gamma^n + \alpha\left(\dfrac{1-\gamma^n}{1-\gamma}\right)\text{\qquad By geometric sum for $\gamma \neq 1$}\\
-&= (1 - \alpha)^n + \alpha\left(\dfrac{1 - (1 - \alpha)^n}{1 - (1 - \alpha)}\right)\\
-&= (1 - \alpha)^n + 1 - (1 - \alpha)^n\\
-&= 1
-\end{align*}
-$$
+      - $(1-\alpha)^n + \sum\limits_{i=1}^n\alpha(1-\alpha)^{n-i} = \gamma^n + \sum\limits_{i=1}^n\alpha\gamma^{n-i}$
+      - $= \gamma^n + \sum\limits_{k=0}^{n-1}\alpha\gamma^{k}$
+      - $= \gamma^n + \alpha\left(\dfrac{1-\gamma^n}{1-\gamma}\right)$
+      - $= (1 - \alpha)^n + \alpha\left(\dfrac{1 - (1 - \alpha)^n}{1 - (1 - \alpha)}\right)$]
+      - $= (1 - \alpha)^n + 1 - (1 - \alpha)^n$
+      - $ =1$
   - This reward calculation is called *exponential recency-weighted average*
 - Constant step size $\alpha_n(a) = \alpha$ does not converge, however this is infact desireable in a non stationary situation
 - *Exercise 2.4* If the step-size parameters, $alpha_n$, are not constant, then the estimate $Q_n$ is a weighted average of previously received rewards with a weighting different from that given by (2.6). What is the weighting on each prior reward for the general case, analogous to (2.6), in terms of the sequence of step-size parameters?
@@ -132,30 +128,21 @@ $$
 - *Exercise 2.6: Mysterious Spikes* The results shown in Figure 2.3 should be quite reliable because they are averages over 2000 individual, randomly chosen 10-armed bandit tasks. Why, then, are there oscillations and spiked in the early part of the curve for the optimistic method? In other words what might make this method perform particularly better or worse on average on particularly early steps?
   - The spikes going up or down could be caused by the act of picking a specific action with higher or lower reward and sticking with it, thus it may perform better on average if is ends up picking a better performing action in the beginning and remains greedy with it, and perform worse when the opposite occurs
 - *Exercise 2.7: Unbiased Constant-Step-Size Trick* In most of tthis chapter we have used sample averages to estimate action values because sample averages do not produce the initial bias that constant step sizes do. However, sample averages are not a completely satisfactory solution because they may perform poorly on nonstationary problems. Is it possible to avoid the bias of constant step sizes while retaining their advantages on nonstationary problems? One way is to use a step size of $\beta_n := \dfrac{\alpha}{\bar{o}_n}$ to process the nth reward for a particular action, where $\alpha> 0$ is a conventional constant step size and $\bar{o}_n$ is a trace of one that starts at 0:
- $\bar{o}_n := \bar{o}_{n-1} + \alpha(1 - \bar{o}_{n-1}), \: n \geq 0, \: \bar{o}_{0} := 0$ 
+  - $\bar{o}_n := \bar{o}_{n-1} + \alpha(1 - \bar{o}_{n-1}), \: n \geq 0, \: \bar{o}_{0} := 0$ 
  Carry out an analysis like that in (2.6) to show that $Q_n$ is an exponential recency-weighted average without initial bias.
+     -  $Q_{n+1} = Q_n + \beta_n[R_n - Q_n]$
+     -  $=\beta_nR_n + (1-\beta_n)Q_n$
+     -  $=\beta_nR_n + (1 - \beta_n)\beta_{n-1}R_{n-1} + (1 - \beta_n)(1 - \beta_{n-1})\beta_{n-2}R_{n-2} + \dots + \beta_1R_1\prod\limits_{i=1}^n(1 - R_i) + Q_1 \prod\limits_{i=1}^n(1 - \beta_i)$
+     -  $=Q_1 \prod\limits_{i=1}^n(1 - \beta_i) + \sum\limits_{i=1}^{n}\beta_iR_i\left(\prod\limits_{j=i+1}^n(1 - \beta_j)\right)$
 
-  $$ 
-  \begin{align*}
-  Q_{n+1} &= Q_n + \beta_n[R_n - Q_n]\\
-          &= \beta_nR_n + (1-\beta_n)Q_n\\
-          &=\beta_nR_n + (1 - \beta_n)\beta_{n-1}R_{n-1} + (1 - \beta_n)(1 - \beta_{n-1})\beta_{n-2}R_{n-2} + \dots + \beta_1R_1\prod\limits_{i=1}^n(1 - R_i) + Q_1 \prod\limits_{i=1}^n(1 - \beta_i)\\
-          &=  Q_1 \prod\limits_{i=1}^n(1 - \beta_i) + \sum\limits_{i=1}^{n}\beta_iR_i\left(\prod\limits_{j=i+1}^n(1 - \beta_j)\right)
-  \end{align*}
-  $$
-
-    - Since we want to show recency decay, we want to show that if $i_1, i_2 \in [1, n], \: i_1 < i_2$ then $\prod\limits_{j=i_1}^n(1 - \beta_j) < \prod\limits_{j=i_2}^n(1 - \beta_j)$ since we want the weight of the more recent indexes to be higher
+  - Since we want to show recency decay, we want to show that if $i_1, i_2 \in [1, n], \: i_1 < i_2$ then $\prod\limits_{j=i_1}^n(1 - \beta_j) < \prod\limits_{j=i_2}^n(1 - \beta_j)$ since we want the weight of the more recent indexes to be higher
     - Thus all we really need to show is that $(1 - \beta_k) < 1 \: \forall k\in [1,n]$, since $\prod\limits_{j=i_1}^n(1 - \beta_j)= r\prod\limits_{j=i_2}^n(1 - \beta_j)$, if $r < 1$ then we know that 
   $r\prod\limits_{j=i_2}^n(1 - \beta_j) < 1*\prod\limits_{j=i_2}^n(1 - \beta_j) = \prod\limits_{j=i_2}^n(1 - \beta_j)$. One way to prove that $r < 1$ is to show that $(1 - \beta_k) < 1 \: \forall k\in [1,n]$, since the product of a bunch of numbers that are less than 1 is still les than 1.
     - Since $\alpha > 0$ is a conventional constant, we also know that $\alpha \in (0,1]$ 
-    $$
-    \begin{align*}
-    \bar{o}_n &= \bar{o}_{n-1} + \alpha(1 - \bar{o}_{n-1}) \\
-    &= \alpha + (1 - \alpha)\alpha + (1 - \alpha)^2\alpha + \dots + (1-\alpha)^{n-1}\alpha + (1-\alpha)^n\bar{o}_0\\
-    &= \alpha + (1 - \alpha)\alpha + (1 - \alpha)^2\alpha + \dots + (1-\alpha)^{n-1}\alpha \text{\qquad Since $\bar{o}_0 = 0$} \\
-    &= \sum\limits_{i=1}^{n-1}\alpha(1-\alpha)^{n-i}
-    \end{align*}
-    $$
+    - $\bar{o}_n = \bar{o}_{n-1} + \alpha(1 - \bar{o}_{n-1})$
+    - $=\alpha + (1 - \alpha)\alpha + (1 - \alpha)^2\alpha + \dots + (1-\alpha)^{n-1}\alpha + (1-\alpha)^n\bar{o}_0$
+    - $=\alpha + (1 - \alpha)\alpha + (1 - \alpha)^2\alpha + \dots + (1-\alpha)^{n-1}\alpha$
+    - $=\sum\limits_{i=1}^{n-1}\alpha(1-\alpha)^{n-i}$
     - As shown before in the [Tracking a Non-Stationary Problem](#Tracking-A-Nonstationary-Problem) section, $\sum\limits_{i=1}^{n-1}\alpha(1-\alpha)^{n-i}$ is indeed a geometric sum, and since $\alpha < 1$ we also know that this geometric sum converges to 1 as $n$ approaches infinity, so we know that $\bar{o}_n$ < 1 for all n > 1 since we can rewrite it as a geometric sum that converges to 1 as $n$ approaches infinity, and for n < 1, we already see that $\bar{o}_0 = 0$
     - Thus we now see that $Q_n$ is indeed a recency-weighted average.
     - We also know that there is no initial bias since $Q_1$ does not affect the calculation of the rest of the rewards in that huge sum (I think thats correct, idek tbh with u LOL, mans dont know how to prove initial bias, only bias ik how to prove is if an estimator is unbiased 😭)
