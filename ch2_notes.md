@@ -19,7 +19,7 @@ MathJax.Hub.Queue(function() {
 
 
 # Chapter 2
-# Week 1 Notes
+# Multi-armed Bandits
 
 ## A $k$-Armed Bandit Problem 
 - TLDR of the problem is you have $k$ options each with a reward that follows a probability distribution
@@ -137,13 +137,18 @@ Loop Forever:
 
   - Since we want to show recency decay, we want to show that if $i_1, i_2 \in [1, n], \: i_1 < i_2$ then $\prod\limits_{j=i_1}^n(1 - \beta_j) < \prod\limits_{j=i_2}^n(1 - \beta_j)$ since we want the weight of the more recent indexes to be higher
     - Thus all we really need to show is that $(1 - \beta_k) < 1 \: \forall k\in [1,n]$, since $\prod\limits_{j=i_1}^n(1 - \beta_j)= r\prod\limits_{j=i_2}^n(1 - \beta_j)$, if $r < 1$ then we know that 
-  $r\prod\limits_{j=i_2}^n(1 - \beta_j) < 1*\prod\limits_{j=i_2}^n(1 - \beta_j) = \prod\limits_{j=i_2}^n(1 - \beta_j)$. One way to prove that $r < 1$ is to show that $(1 - \beta_k) < 1 \: \forall k\in [1,n]$, since the product of a bunch of numbers that are less than 1 is still les than 1.
+  $r\prod\limits_{j=i_2}^n(1 - \beta_j) < 1*\prod\limits_{j=i_2}^n(1 - \beta_j) = \prod\limits_{j=i_2}^n(1 - \beta_j)$. 
+  - One way to prove that $r < 1$ is to show that $(1 - \beta_k) < 1 \: \forall k\in [1,n]$, since the product of a bunch of numbers that are less than 1 is still les than 1.
     - Since $\alpha > 0$ is a conventional constant, we also know that $\alpha \in (0,1]$ 
     - $\bar{o}_n = \bar{o}_{n-1} + \alpha(1 - \bar{o}_{n-1})$
     - $=\alpha + (1 - \alpha)\alpha + (1 - \alpha)^2\alpha + \dots + (1-\alpha)^{n-1}\alpha + (1-\alpha)^n\bar{o}_0$
     - $=\alpha + (1 - \alpha)\alpha + (1 - \alpha)^2\alpha + \dots + (1-\alpha)^{n-1}\alpha$
     - $=\sum\limits_{i=1}^{n-1}\alpha(1-\alpha)^{n-i}$
-    - As shown before in the [Tracking a Non-Stationary Problem](#Tracking-A-Nonstationary-Problem) section, $\sum\limits_{i=1}^{n-1}\alpha(1-\alpha)^{n-i}$ is indeed a geometric sum, and since $\alpha < 1$ we also know that this geometric sum converges to 1 as $n$ approaches infinity, so we know that $\bar{o}_n$ < 1 for all n > 1 since we can rewrite it as a geometric sum that converges to 1 as $n$ approaches infinity, and for n < 1, we already see that $\bar{o}_0 = 0$
+    - As shown before in the [Tracking a Non-Stationary Problem](#Tracking-A-Nonstationary-Problem) section, $\sum\limits_{i=1}^{n-1}\alpha(1-\alpha)^{n-i}$ is a geometric sum as such:
+      - $\alpha\dfrac{1 - (1-\alpha)^n}{\alpha} = 1 - (1-\alpha)^n$
+    - Thus $\beta_n = \dfrac{\alpha}{1 - (1-\alpha)^n}$
+    - Since $\alpha$ is a conventional constant, $\alpha \in [0,1)$, thus we know that $1 - (1-\alpha)^n > 0$, increases and approaches 1 as $n \rightarrow \infty$
+    - Thus $\beta_n < 1$ since $\beta_n \rightarrow \alpha$ as $n \rightarrow \infty$, Thus $0 < 1 - \beta_n < 1$ as wanted
     - Thus we now see that $Q_n$ is indeed a recency-weighted average.
     - We also know that there is no initial bias since $Q_1$ does not affect the calculation of the rest of the rewards in that huge sum (I think thats correct, idek tbh with u LOL, mans dont know how to prove initial bias, only bias ik how to prove is if an estimator is unbiased 😭)
 
