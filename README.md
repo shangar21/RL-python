@@ -8,3 +8,5 @@ https://www.coursera.org/learn/fundamentals-of-reinforcement-learning/home/welco
 I will Have markdown version of notes here, but since GH does not render latex, if you want notes pree my website, will add links as I go along.
 
 - [Chapter 2 : Multi Armed Bandits](https://shangar.ddns.net/blog_post/16)
+- [Chapter 3 : Markov Decisions](https://shangar.ddns.net/blog_post/17)
+  - notes related to policy on the way
