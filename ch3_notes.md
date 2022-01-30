@@ -6,7 +6,8 @@ MathJax.Hub.Config({
     tex2jax: {
         inlineMath: [['$','$'], ['\\(','\\)']],
         skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // removed 'code' entry
-    }
+    },
+    TeX: {Macros: {'\_' : ['_'], subscript:[]}}
 });
 MathJax.Hub.Queue(function() {
     var all = MathJax.Hub.getAllJax(), i;
@@ -171,3 +172,51 @@ MathJax.Hub.Queue(function() {
   - Thus we are left with:
     - $\lim_{k \to \infty}\left(\dfrac{1 - \gamma^{k+1}}{1 - \gamma}\right) = \dfrac{1}{1 - \gamma}$ as wanted
 
+## Unified Notation for Episodic and Continuing Tasks
+
+ - *absorbing state* is a state that transitions only to itself and that generates only rewards of zero.
+
+## Policies and Value Functions
+
+- *policy* is a mapping from states to probabilities of selecting each possible action
+  - denoted at $\pi(a|s)$
+  - $\pi(a|s)$ is the probability that $A_t = a$ if $S_t = s$
+  - $\pi(a|s)$ is a probability distribution over $a \in \mathcal{A}(s)$ for each $s \in \mathcal{S}$
+- *Exercise 3.11*  If the current state is St , and actions are selected according to stochastic policy $\pi$, then what is the expectation of $R_{t+1}$ in terms of $\pi$ and the four-argument function p (3.2)?
+  - https://ai.stackexchange.com/questions/21663/if-the-current-state-is-s-t-and-the-actions-are-chosen-according-to-pi-wha
+- *value function* is a function of state $s$ under policy $\pi$, denoted $v_{\pi}(s)$, is the expected return when starting in $s$ and following in $\pi$ thereafter. 
+  - $v_{\pi}(s) := \mathbb{E}_{\pi}\left[G_t|S_t=s\right] = \mathbb{E}_{\pi}\left[\sum\limits_{k=1}^{\infty}\gamma^k R_{t+k+1} \big\rvert S_t = s \right]\: \forall s \in \mathcal{S}$
+  - $v_\pi$ is called the *state-value function for policy $\pi$*
+- $q_\pi$ is known as the *action-value function for policy $\pi$*
+  - $q_{\pi}(s, a) := \mathbb{E}_{\pi}\left[G_t|S_t=s, A_t=a\right] = \mathbb{E}_{\pi}\left[\sum\limits_{k=1}^{\infty}\gamma^k R_{t+k+1} \big\rvert S_t = s, A_t=a \right]\: \forall s \in \mathcal{S}$
+- If an agent follows a policy $\pi$ and maintains an average or rewards, as the number of times we see $s \in \mathcal{S}$ approaches infinity, the average approaches $v_\pi(s)$
+- Following the same constraints as above, but keeping seperate averages for each action and state, then the average approaches $q_\pi(s,a)$
+- *Monte Carlo Methods* a method of averaging many random samples of returns (the above two cases are cases of monte carlo methods)
+- $v_\pi(s) = \sum\limits_a \pi(a|s)\sum\limits_{s', r}p(s',r|s,a)\left[r + \gamma v_\pi(s')\right] \: \forall s \in \mathcal{S}$
+  - this is referred to as the *Bellman equation* for $v_\pi(s)$
+  - Below is a diagram of $v_\pi(s)$
+    - Each pink node denotes an action, each green node denotes a state/action pair
+```mermaid
+graph TD
+    style B fill:#FF69B4
+    style C fill:#FF69B4
+    style D fill:#FF69B4
+    style A fill:#04a412
+    style A fill:#04a412
+    style E fill:#04a412
+    style F fill:#04a412
+    style G fill:#04a412
+    style H fill:#04a412
+    style I fill:#04a412
+    style J fill:#04a412
+    A[s] --> B( )
+    A -->|policy| C(a)
+    A --> D( )
+    B -->E( )
+    B --> F( )
+    C -->|reward| G(s')
+    C -->|probability|H(s')
+    D --> I( )
+    D --> J( )
+```
+ 
