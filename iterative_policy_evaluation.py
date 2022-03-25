@@ -44,7 +44,7 @@ def initialize_policy(ones=False):
     return {(state, action):0.25 if is_valid_action(state, action) else 0 for state in STATES for action in ACTIONS}
 
 def initialize_values():
-    return {state: -1 if state not in [0, 14] else 0 for state in STATES}
+    return {state: -1 if state not in [0, 15] else 0 for state in STATES}
 
 def get_next_action(state, policy, vector=True):
     action_probabilities = [policy[(state, k)] for k in ACTIONS]
