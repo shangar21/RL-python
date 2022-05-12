@@ -61,14 +61,25 @@ class BlackJack():
         while self.get_current_sum(self.dealer_cards) < 17:
             self.dealer_cards += self._hit()
 
+    def take_action(self, action):
+        cards = self.player_cards
+        if action == 'hit':
+            cards += self._hit()
+        elif action == 'stick':
+            self._stick()
+
     def reward(self):
         player_cards = self.player_cards
         player_total = self.get_current_sum(player_cards)
         dealer_total = self.get_current_sum(self.dealer_cards)
+        if not self.player_stick:
+            return 0
+        if self.is_blackjack(player_cards) and self.is_blackjack(self.dealer_cards):
+            return 0
         if self.is_blackjack(player_cards):
             return 1
         if self.is_bust(self.dealer_cards):
-            return 1
+            return -1
         if not self.is_bust(player_cards) and player_total >= dealer_total:
             return 1
         if not self.is_bust(player_cards) and player_total == dealer_total:
