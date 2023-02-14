@@ -53,6 +53,8 @@ def action_UCB(rewards, c, t, num_actions):
     vals_arr = [rewards[i] + sqroot[i] for i in range(len(rewards))]
     return np.argmax(vals_arr)
 
+if __name__ == '__main__'
+
 machine = Machine(num_actions=10)
 machine_ucb = Machine(num_actions=10)
 epsilon = 0.1

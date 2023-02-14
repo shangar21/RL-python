@@ -55,17 +55,23 @@ def get_next_action(state, policy, vector=True):
         return list(ACTIONS.keys())[np.random.choice(choices, 1)[0]]
     return ACTIONS[list(ACTIONS.keys())[np.random.choice(choices, 1)[0]]]
 
+def take_next_action(state, action):
+    return translate_state(np.add(translate_state(state), ACTIONS[action]))
+
 def gen_valid_next_states(state):
     return [np.add(translate_state(state), ACTIONS[action]) for action in ACTIONS if is_valid_action(state, action)]
 
-def get_new_value(state, policy, values, gamma):
-    sum = 0
+def get_new_value(state, policy, values, gamma, ones=False):
+    sum_r = 0
     for action in ACTIONS:
         if is_valid_action(state, action):
-            pi_a_s = policy[(state, action)]
+            if not ones:
+                pi_a_s = policy[(state, action)]
+            else:
+                pi_a_s = policy[(state, action)]/sum([policy[(state, i)] for i in ACTIONS])
             next_state = translate_state(np.add(translate_state(state), ACTIONS[action]))
-            sum += pi_a_s * (-1 + gamma*values[next_state])
-    return sum
+            sum_r += pi_a_s * (-1 + gamma*values[next_state])
+    return sum_r
 
 def gen_next_action_values(state, values, gamma=0.9):
     action_vals = {}
@@ -77,12 +83,12 @@ def gen_next_action_values(state, values, gamma=0.9):
             action_vals[action] = value
     return action_vals
 
-def policy_evaluation(policy, values, epsilon=0, gamma=0.9):
+def policy_evaluation(policy, values, epsilon=0, gamma=0.9, ones=False):
     deltas = []
     while epsilon not in deltas:
         for state in STATES:
             v = values[state]
-            values[state] = get_new_value(state, policy, values, gamma)
+            values[state] = get_new_value(state, policy, values, gamma, ones=False)
             deltas.append(v-values[state])
     return values
 

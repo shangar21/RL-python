@@ -9,6 +9,8 @@ class BlackJack():
         'king':10
     }
 
+    ACTIONS = ['hit', 'stick']
+
     def __init__(self):
         self.DECK = [i for _ in range(4) for i in self.CARD_SCORES]
         self.dealer_cards = self._hit(num_hits=2)
@@ -87,6 +89,9 @@ class BlackJack():
         if not self.is_bust(player_cards) and player_total <= dealer_total:
             return -1
         return -1
+
+    def step(self, action):
+        pass
 
 if __name__ == '__main__':
     game = BlackJack()

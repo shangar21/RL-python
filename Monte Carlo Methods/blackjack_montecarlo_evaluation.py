@@ -1,4 +1,4 @@
-from blackjack import BlackJack
+from Environments.blackjack import BlackJack
 from tqdm import tqdm
 import multiprocessing as mp
 
